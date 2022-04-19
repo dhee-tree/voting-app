@@ -1,0 +1,24 @@
+{% extends "vote/base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}Get Code{% endblock %}
+
+{% block main %}
+
+<div class="row">
+    <div class="col-md-12">
+        <section>
+            <p> Enter your college email to get your code:</p>
+            <form method="POST">
+                {% csrf_token %}
+                {% render_field form.email placeholder="Enter College Email" %}<br><br>
+                <button onclick="getCode()" class="btn btn-success">Get My Code</button>
+            </form>
+<!--                <input type ="password" name="EUC" placeholder="Enter College Email"> <br>-->
+
+        </section>
+    </div>
+</div>
+
+{% endblock %}
