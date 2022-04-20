@@ -43,7 +43,7 @@ def code(request):
                     level = 'H'
                 user_code = user_rand_code(level)
                 save_user = UserVote(email=user_email, user_code=user_code)
-                # save_user.save()
+                save_user.save()
 
                 selected_level_title = selected_level.title()
                 send_mail(
