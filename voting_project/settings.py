@@ -81,13 +81,23 @@ WSGI_APPLICATION = 'voting_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dcntcculqgnan0',
+        'USER': 'vzdvwhtglrswob',
+        'PASSWORD': '50c206008b0efa14098347031cf347680ac731f10f9a606ebaa91d1acf797ada',
+        'HOST': 'ec2-54-173-77-184.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
