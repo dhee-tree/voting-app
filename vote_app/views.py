@@ -10,7 +10,7 @@ from .forms import CreateCodeForm
 from .models import UserVote
 
 
-def user_rand_code():
+def user_rand_code(level):
     num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
     num = choice(num_list)
@@ -20,7 +20,7 @@ def user_rand_code():
     num5 = choice(num_list)
     num6 = choice(num_list)
 
-    return f'U-{num}{num2}{num3}{num4}{num5}{num6}'
+    return f'{level}-{num}{num2}{num3}{num4}{num5}{num6}'
 
 
 def home(request):
@@ -30,22 +30,43 @@ def home(request):
 
 def code(request):
     if request.method == 'POST':
+        selected_level = request.POST['level']
         form = CreateCodeForm(request.POST)
         if form.is_valid():
-            user_email = form.cleaned_data['email']
-            user_code = user_rand_code()
-            save_user = UserVote(email=user_email, user_code=user_code)
-            save_user.save()
+            valid_levels = ['level 1', 'level 2', 'level 3']
+            if selected_level in valid_levels:
+                user_email = form.cleaned_data['email']
 
-            send_mail(
-                'College Voting Code',
-                f'Hello, here is your code: {user_code}',
-                'realdheetree@gmail.com',
-                [user_email],
-                fail_silently=False
-            )
+                if selected_level == 'level 1' or selected_level == 'level 2':
+                    level = 'U'
+                else:
+                    level = 'H'
+                user_code = user_rand_code(level)
+                save_user = UserVote(email=user_email, user_code=user_code)
+                # save_user.save()
 
-            return redirect('success')
+                selected_level_title = selected_level.title()
+                send_mail(
+                    'College Voting Code',
+                    f'Hello, here is your code: {user_code}\nAs you are a {selected_level_title} student, your code '
+                    f'will only give you access to {selected_level_title} teachers.\n\n'
+                    f'Vote here: https://sleepy-sands-97119.herokuapp.com/voting/',
+                    'realdheetree@gmail.com',
+                    [user_email],
+                    fail_silently=False
+                )
+
+                context = {
+                    'email': user_email
+                }
+
+                return render(request, 'vote/success.html', context)
+            else:
+                context = {
+                    'form': form,
+                    'message': 'Please select a level.',
+                }
+                return render(request, 'vote/code.html', context)
     else:
         form = CreateCodeForm
     context = {
@@ -54,8 +75,8 @@ def code(request):
     return render(request, 'vote/code.html', context)
 
 
-def success(request):
-    return render(request, 'vote/success.html')
+def voting(request):
+    return render(request, 'vote/vote.html')
 
 
 def second_home(request):

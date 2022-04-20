@@ -7,8 +7,11 @@
 <div class="row">
 		<div class="col-md-12">
 
-            <h2>Your code has being generated and emailed to:</h2>
-            <p>{{ user_email }}</p>
+            <section>
+				<h2>Your code has being generated and emailed to:</h2>
+				<p>{{ email }}</p><br><br>
+				<a href="{% url 'voting' %}" class="btn btn-primary">Vote now!</a>
+			</section>
 
 		</div>
 	</div>

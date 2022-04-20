@@ -12,7 +12,14 @@
             <p> Enter your college email to get your code:</p>
             <form method="POST">
                 {% csrf_token %}
-                {% render_field form.email placeholder="Enter College Email" %}<br><br>
+                <select id="level" name="level">
+                    <option>Select level</option>
+                    <option value="level 1">Level 1</option>
+                    <option value="level 2">Level 2</option>
+                    <option value="level 3">Level 3</option>
+                </select> <span class="message">{{ message }}</span>
+                <br><br>
+                {% render_field form.email class="code-form" placeholder="Enter College Email" %}<br><br>
                 <button onclick="getCode()" class="btn btn-success">Get My Code</button>
             </form>
 <!--                <input type ="password" name="EUC" placeholder="Enter College Email"> <br>-->
