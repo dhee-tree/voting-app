@@ -9,7 +9,13 @@
 
             <section>
 				<h2>Your code has being generated and emailed to:</h2>
-				<p>{{ email }}</p><br><br>
+				<p><u>{{ email }}</u></p>
+				<p>Is your email correct? You will not get your code if email is incorrect, hence you will not be able to vote,</p>
+				<p>If you think your email is incorrect,</p>
+				<a href="{% url 'code' %}" class="btn btn-secondary">Get another code</a>
+				<br>
+				<span>OR</span>
+				<br>
 				<a href="{% url 'voting' %}" class="btn btn-primary">Vote now!</a>
 			</section>
 
