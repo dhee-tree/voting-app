@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-jfu^3zaet3)tb#rve=+evw_7w@x_3l#i2d37fwprtvbiw7@tf)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['ddah.herokuapp.com']
+ALLOWED_HOSTS = ['https://sleepy-sands-97119.herokuapp.com/']
 
 
 # Application definition
@@ -143,7 +143,7 @@ django_heroku.settings(locals())
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "realdheetree@gmail.com"
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_PASSWORD = 'Tr33Pword@@#'
 EMAIL_USE_TLS = True
 
 # Default primary key field type
