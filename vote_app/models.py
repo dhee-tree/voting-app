@@ -15,6 +15,6 @@ class Vote(models.Model):
 
 
 class UserVote(models.Model):
-    email = models.EmailField(max_length=30)
+    email = models.EmailField(max_length=250)
     user_code = models.CharField(max_length=15)
     user_vote_count = models.IntegerField(default=0)
