@@ -11,15 +11,16 @@ from .models import UserVote
 
 
 def user_rand_code():
-    letter_list = ['a', 'b', 'c', 'd']
-    num_list = [1, 2, 3, 4, 5]
-    spec_list = ['@', '?', '#']
+    num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
-    letter = choice(letter_list)
     num = choice(num_list)
-    special = choice(spec_list)
+    num2 = choice(num_list)
+    num3 = choice(num_list)
+    num4 = choice(num_list)
+    num5 = choice(num_list)
+    num6 = choice(num_list)
 
-    return f'{letter}{num}{special}'
+    return f'U-{num}{num2}{num3}{num4}{num5}{num6}'
 
 
 def home(request):
