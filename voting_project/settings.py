@@ -133,7 +133,7 @@ django_heroku.settings(locals())
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = "realdheetree@gmail.com"
-EMAIL_HOST_PASSWORD = ""
+EMAIL_HOST_PASSWORD = os.environ.setdefault('EMAIL_HOST_PASSWORD', 'voting_project.settings')
 EMAIL_USE_TLS = True
 
 # Default primary key field type

@@ -1,1 +1,1 @@
-web gunicorn voting.wsgi:application --log-file -
+web gunicorn voting_project.wsgi:application --log-file -
