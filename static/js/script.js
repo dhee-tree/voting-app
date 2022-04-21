@@ -1,3 +1,7 @@
-//function getCode() {
-//  alert("Your code is U-123456");
-//}
+function validCode() {
+  alert("Your code valid");
+}
+
+function invalidCode() {
+  alert("Your code invalid");
+}

@@ -8,8 +8,12 @@
 
             <section>
                     <span> Please enter your code to vote:</span><br><br>
+                <form method="POST" name="check-code">
+                    {% csrf_token %}
                     <input type="text" name="EUC" placeholder="Enter Unique Code" class="code-form"> <br><br>
-                <a href="#" class="btn btn-success">Cast Vote</a>
+                    <p>{{ message }}</p>
+                    <button class="btn btn-success">Check My Code</button>
+                </form>
             </section>
 		</div>
 </div>

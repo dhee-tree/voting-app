@@ -35,10 +35,7 @@ section {
     color: red;
     display: inline-block;
 }
-/* .sec {
-    text-align: left;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -30%);
-} */
+
+.unit-odd {
+    color: green;
+}
