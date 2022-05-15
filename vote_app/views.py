@@ -84,7 +84,12 @@ def voting(request):
                 selected_teacher = request.POST['teachers']
             except django.utils.datastructures.MultiValueDictKeyError:
                 status = request.POST['voted']
-                point = request.POST['support']
+                support = request.POST['support']
+                style = request.POST['style']
+                resources = request.POST['style']
+
+                point = int(support) + int(style) + int(resources)
+
                 used_code = request.POST['code']
                 context = {
                     'mode': 'voted',
