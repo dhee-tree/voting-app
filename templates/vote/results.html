@@ -1,30 +1,23 @@
 {% extends "vote/base.html" %}
 
+{% load widget_tweaks %}
+
 {% block title %}Results{% endblock %}
 
 {% block main %}
 <div class="row">
-    <div class="col-lg-8 col-lg-offset-2">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Poll Result</h3>
-            </div>
+		<div class="col-md-12">
+            <section>
+                <h1>Here are yur results</h1>
+                {% for teacher in teacher %}
+                <p>{{ teacher.name }}  {{ teacher.points }} point(s)</p>
+                {% endfor %}
 
-            <div class="panel-body">
-                <h3>{{ poll.question }}</h3>
-            </div>
+                <a href="{% url 'index' %}" class="btn btn-success">Home</a><br><br>
+                <a href="{% url 'voting' %}" class="btn btn-primary">Cast A Vote</a>
 
-            <ul class="list-group">
-                <li class="list-group-item">{{ poll.option_one }} &mdash; <strong>{{ poll.option_one_count }}</strong></li>
-                <li class="list-group-item">{{ poll.option_two }} &mdash; <strong>{{ poll.option_two_count }}</strong></li>
-                <li class="list-group-item">{{ poll.option_three }} &mdash; <strong>{{ poll.option_three_count }}</strong></li>
-            </ul>
-
-            <div class="panel-footer">
-                Total &mdash; <strong>{{ poll.total }}</strong>
-            </div>
-
+            </section>
         </div>
-    </div>
+
 </div>
 {% endblock %}

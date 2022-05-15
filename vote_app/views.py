@@ -4,11 +4,8 @@ from django.core.mail import send_mail
 
 from random import choice
 
-from .forms import CreateVoteForm
-from .models import Vote
-
 from .forms import CreateCodeForm
-from .models import UserVote, Teachers
+from .models import UserVote, Higher
 
 
 def user_rand_code(level):
@@ -78,109 +75,93 @@ def code(request):
 
 def voting(request):
     if request.method == 'POST':
-        teachers = Teachers.objects.all()
+        teachers = Higher.objects.all()
         try:
             user_unique_code = request.POST['EUC']
             print(user_unique_code)
         except django.utils.datastructures.MultiValueDictKeyError:
-            selected_teacher = request.POST['teachers']
-            print(selected_teacher)
-            teacher_obj = Teachers.objects.get(name=selected_teacher)
-            teacher_id_str = str(teacher_obj)[17:18]
+            try:
+                selected_teacher = request.POST['teachers']
+            except django.utils.datastructures.MultiValueDictKeyError:
+                status = request.POST['voted']
+                point = request.POST['support']
+                used_code = request.POST['code']
+                context = {
+                    'mode': 'voted',
+                    'point': point,
+                    'voted_teacher': status
+                }
 
-            teacher_id = int(teacher_id_str)
-            print(teacher_id)
+                get_teacher = Higher.objects.get(name=status)
+                old_point = get_teacher.points
+                get_teacher.points = old_point + int(point)
+                get_teacher.save()
 
-            units = ['unit_one', 'unit_two', 'unit_three']
-            teacher_units = []
-            for unit in units:
-                obj = Teachers.objects.get(id=teacher_id)
-                field_obj = Teachers._meta.get_field(unit)
-                get_units = field_obj.value_from_object(obj)
-                teacher_units.append(get_units)
+                get_used_code = UserVote.objects.get(user_code=used_code)
+                old_code_count = get_used_code.user_vote_count
+                get_used_code.user_vote_count = old_code_count + 1
+                get_used_code.save()
+                return render(request, 'vote/castVote.html', context)
 
-            print(teacher_units)
-            context = {
-                'teacher': selected_teacher,
-                'mode': 'selected',
-                'units': teacher_units
-            }
-            return render(request, 'vote/castVote.html', context)
+            else:
+                user_code = request.POST['code']
+                print(selected_teacher)
+                teacher_obj = Higher.objects.get(name=selected_teacher)
+                teacher_id = teacher_obj.id
+
+                print(teacher_id)
+
+                units = ['unit_one', 'unit_two', 'unit_three']
+                teacher_units = []
+                for unit in units:
+                    obj = Higher.objects.get(id=teacher_id)
+                    field_obj = Higher._meta.get_field(unit)
+                    get_units = field_obj.value_from_object(obj)
+                    teacher_units.append(get_units)
+
+                all_glh = obj.unit_one_glh + obj.unit_two_glh + obj.unit_three_glh
+                averageglh = all_glh / 60
+
+                context = {
+                    'teacher': selected_teacher,
+                    'mode': 'selected',
+                    'units': teacher_units,
+                    'object': obj,
+                    'glhs': all_glh,
+                    'aveGlhs': averageglh,
+                    'user_code': user_code,
+                }
+                return render(request, 'vote/castVote.html', context)
         else:
             try:
                 stored_codes = UserVote.objects.get(user_code=user_unique_code)
-                print(stored_codes)
+                print(stored_codes.id)
             except UserVote.DoesNotExist:
                 context = {
                     'message': 'Your code is not valid!'
                 }
                 return render(request, 'vote/vote.html', context)
             else:
-                context = {
-                    'message': f'{user_unique_code} is valid!',
-                    'teachers': teachers,
-                    'mode': 'start',
-                }
-
-                return render(request, 'vote/castVote.html', context)
-
+                check_vote = stored_codes.user_vote_count
+                if check_vote > 0:
+                    context = {
+                        'message': 'Your code has already being used to vote!'
+                    }
+                    return render(request, 'vote/vote.html', context)
+                else:
+                    context = {
+                        'message': user_unique_code,
+                        'teachers': teachers,
+                        'mode': 'start',
+                    }
+                    return render(request, 'vote/castVote.html', context)
     return render(request, 'vote/vote.html')
 
 
-def cast_vote(request):
+def result(request):
+    teachers = Higher.objects.all()
     context = {
-
+        'teacher': teachers
     }
-    return render(request, 'vote/castVote.html', context)
+    return render(request, 'vote/results.html', context)
 
-# def second_home(request):
-#     votes = Vote.objects.all()
-#     context = {
-#         'votes': votes
-#     }
-#     return render(request, 'vote/home.html', context)
-
-
-# def create(request):
-#     if request.method == 'POST':
-#         form = CreateVoteForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('index')
-#     else:
-#         form = CreateVoteForm()
-#     context = {
-#         'form': form
-#     }
-#     return render(request, 'vote/castVote.html', context)
-
-
-# def vote(request, vote_id):
-#     poll = Vote.objects.get(pk=vote_id)
-#
-#     if request.method == 'POST':
-#         voted = request.POST['poll']
-#         if voted == 'option1':
-#             poll.option_one_count += 1
-#         elif voted == 'option2':
-#             poll.option_two_count += 1
-#         elif voted == 'option3':
-#             poll.option_three_count += 1
-#         else:
-#             return HttpResponse(400, 'Invalid form')
-#
-#         poll.save()
-#
-#         return redirect('results', vote_id)
-#     context = {
-#         'vote': poll
-#     }
-#     return render(request, 'vote/vote.html', context)
-#
-#
-# def results(request, vote_id):
-#     poll = Vote.objects.get(pk=vote_id)
-#     context = {
-#         'poll': poll
-#     }
-#     return render(request, 'vote/results.html', context)

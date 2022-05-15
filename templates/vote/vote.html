@@ -11,7 +11,7 @@
                 <form method="POST" name="check-code">
                     {% csrf_token %}
                     <input type="text" name="EUC" placeholder="Enter Unique Code" class="code-form"> <br><br>
-                    <p>{{ message }}</p>
+                    <p class="message">{{ message }}</p><br>
                     <button class="btn btn-success">Check My Code</button>
                 </form>
             </section>

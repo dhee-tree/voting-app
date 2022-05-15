@@ -7,9 +7,8 @@
 {% block main %}
 <div class="row">
 		<div class="col-md-12">
-
             {% if mode == 'start' %}
-                <p>{{ message }}</p>
+                <p>{{ message }} is valid!</p>
                 <p>Please choose who you are voting for</p>
                 <form method="POST">
                     {% csrf_token %}
@@ -18,16 +17,78 @@
                             <option>{{ teacher.name }}</option>
                         {% endfor %}
                     </select>
+                    <br><br>
+                    <select name="code" id="pandora">
+                        <option>{{ message }}</option>
+                    </select>
                     <button class="btn btn-success">Select</button>
                 </form>
+
             {% elif mode == 'selected' %}
-                <p>Give more details</p>
                 <p>Here are {{ teacher }}'s Units:</p>
+
+                <br>
                 {% for unit in units %}
                     <span class="unit-odd">{{ unit }}</span>
                 {% endfor %}
+                <br><br><br>
+            <p>Voting with {{ user_code }}</p>
+                <p>{{ teacher }}'s total GLH is {{ glhs }}, this gives him {{ aveGlhs }} points </p>
+                <p>Give more details, the more questions you answer the more points {{ teacher }} gets.</p>
+                <br>
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="teacher-details">
+                    <select name="code" id="pandora">
+                        <option>{{ user_code }}</option>
+                    </select>
+                    <p>How supportive is the teacher?</p>
+                    <input type="radio" id="supportWeak" name="support" value="1">
+                    <label for="supportWeak">Weak</label>
+
+                    <input type="radio" id="supportSolid" name="support" value="2">
+                    <label for="supportSolid">Solid</label>
+
+                    <input type="radio" id="supportDivine" name="support" value="3">
+                    <label for="supportDivine">Divine</label>
+                </div>
+
+                <div class="teacher-details">
+                    <p>How would you rate their teaching style?</p>
+                    <input type="radio" id="styleWeak" name="style" value="1">
+                    <label for="styleWeak">Weak</label>
+
+                    <input type="radio" id="styleSolid" name="style" value="2">
+                    <label for="styleSolid">Solid</label>
+
+                    <input type="radio" id="styleDivine" name="style" value="3">
+                    <label for="styleDivine">Divine</label>
+                </div>
+
+                <div class="teacher-details">
+                    <p>Does the teacher provide useful resources that help with your learning?</p>
+                    <input type="radio" id="resourcesWeak" name="resources" value="1">
+                    <label for="resourcesWeak">Weak</label>
+
+                    <input type="radio" id="resourcesSolid" name="resources" value="2">
+                    <label for="resourcesSolid">Solid</label>
+
+                    <input type="radio" id="resourcesDivine" name="resources" value="3">
+                    <label for="resourcesDivine">Divine</label>
+                </div>
+
                 <br><br>
-                <button class="btn btn-success">Vote for {{ teacher }}</button>
+
+                <button name="voted" class="btn btn-success" type="submit" value="{{ teacher }}">Vote for {{ teacher }}</button>
+
+            </form>
+
+            {% elif mode == 'voted' %}
+                <h1>You have voted successfully</h1>
+                <h3>Details of your vote</h3>
+                <p>You voted for {{ voted_teacher }} and gave them {{ point }} points</p>
+                <a href="{% url 'results' %}" class="btn btn-success">See Results</a>
             {% endif %}
 		</div>
 </div>
