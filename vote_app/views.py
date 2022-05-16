@@ -1,5 +1,5 @@
 import django.utils.datastructures
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render
 from django.core.mail import send_mail
 
 from random import choice
@@ -9,6 +9,7 @@ from .models import UserVote, Higher
 
 
 def user_rand_code(level):
+    """Generates six random number, which would be combined with either H or U for user code."""
     num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
     num = choice(num_list)
@@ -84,11 +85,12 @@ def voting(request):
                 selected_teacher = request.POST['teachers']
             except django.utils.datastructures.MultiValueDictKeyError:
                 status = request.POST['voted']
+                glhpoint = request.POST['GLH']
                 support = request.POST['support']
                 style = request.POST['style']
-                resources = request.POST['style']
+                resources = request.POST['resources']
 
-                point = int(support) + int(style) + int(resources)
+                point = int(glhpoint) + int(support) + int(style) + int(resources)
 
                 used_code = request.POST['code']
                 context = {
@@ -99,6 +101,7 @@ def voting(request):
 
                 get_teacher = Higher.objects.get(name=status)
                 old_point = get_teacher.points
+                print(old_point)
                 get_teacher.points = old_point + int(point)
                 get_teacher.save()
 
@@ -125,7 +128,7 @@ def voting(request):
                     teacher_units.append(get_units)
 
                 all_glh = obj.unit_one_glh + obj.unit_two_glh + obj.unit_three_glh
-                averageglh = all_glh / 60
+                averageglh = all_glh // 60
 
                 context = {
                     'teacher': selected_teacher,

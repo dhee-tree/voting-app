@@ -43,7 +43,12 @@
                     <select name="code" id="pandora">
                         <option>{{ user_code }}</option>
                     </select>
+                    <select name="GLH" id="pandora">
+                        <option>{{ aveGlhs }}</option>
+                    </select>
                     <p>How supportive is the teacher?</p>
+                    <input type="radio" id="pandora" name="support" value="0" checked>
+
                     <input type="radio" id="supportWeak" name="support" value="1">
                     <label for="supportWeak">Weak</label>
 
@@ -56,6 +61,8 @@
 
                 <div class="teacher-details">
                     <p>How would you rate their teaching style?</p>
+                    <input type="radio" id="pandora" name="style" value="0" checked>
+
                     <input type="radio" id="styleWeak" name="style" value="1">
                     <label for="styleWeak">Weak</label>
 
@@ -68,6 +75,8 @@
 
                 <div class="teacher-details">
                     <p>Does the teacher provide useful resources that help with your learning?</p>
+                    <input type="radio" id="pandora" name="resources" value="0" checked>
+
                     <input type="radio" id="resourcesWeak" name="resources" value="1">
                     <label for="resourcesWeak">Weak</label>
 
