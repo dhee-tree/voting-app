@@ -1,0 +1,34 @@
+{% extends "vote/base.html" %}
+
+{% load widget_tweaks %}
+
+{% block title %}Reset{% endblock %}
+
+{% block main %}
+
+<div class="row">
+    <div class="col-md-12">
+        <section>
+            <form method="POST">
+                    {% csrf_token %}
+                <input type="radio" id="reset" name="reset" value="1">
+                <label for="reset">Reset</label> <br><br>
+
+                <input type="radio" id="off_all" name="reset" value="0">
+                <label for="off_all">Off All</label>
+                <br>
+                <button class="btn btn-danger" type="submit">RESET</button>
+            </form>
+        </section>
+    </div>
+
+    <div class="col-md-12">
+        <section>
+            {% for count in counts %}
+                <p>{{ count.user_vote_count }} </p>
+            {% endfor %}
+        </section>
+    </div>
+</div>
+
+{% endblock %}
