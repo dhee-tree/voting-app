@@ -205,9 +205,19 @@ def adminrest(request):
         action = request.POST['reset']
         print(action)
         counts = UserVote.objects.all()
-        for count in counts:
-            count.user_vote_count = 0
-            count.save()
+        h_points = Higher.objects.all()
+        u_points = Lower.objects.all()
+        for reset in counts:
+            reset.user_vote_count = 0
+            reset.save()
+
+        for reset in h_points:
+            reset.points = 0
+            reset.save()
+
+        for reset in u_points:
+            reset.points = 0
+            reset.save()
 
     vote_counts = UserVote.objects.all()
     context = {
