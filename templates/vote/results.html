@@ -6,18 +6,37 @@
 
 {% block main %}
 <div class="row">
-		<div class="col-md-12">
+    <div class="col-md-3">
+    </div>
+		<div class="col-md-3">
             <section>
-                <h1>Here are yur results</h1>
-                {% for teacher in teacher %}
+                <h3>Here are the results for Level 3</h3>
+                {% for teacher in h_teacher %}
                 <p>{{ teacher.name }}  {{ teacher.points }} point(s)</p>
                 {% endfor %}
-
-                <a href="{% url 'index' %}" class="btn btn-success">Home</a><br><br>
-                <a href="{% url 'voting' %}" class="btn btn-primary">Cast A Vote</a>
 
             </section>
         </div>
 
+    <div class="col-md-3">
+            <section>
+                <h3>Here are the results for Level 1/2</h3>
+                {% for teacher in u_teacher %}
+                <p>{{ teacher.name }}  {{ teacher.points }} point(s)</p>
+                {% endfor %}
+
+            </section>
+    </div>
+    <div class="col-md-3">
+    </div>
 </div>
+<div class="row">
+    <div class="col-md-12">
+        <section>
+            <a href="{% url 'index' %}" class="btn btn-success">Home</a><br><br>
+            <a href="{% url 'voting' %}" class="btn btn-primary">Cast A Vote</a>
+        </section>
+    </div>
+</div>
+
 {% endblock %}

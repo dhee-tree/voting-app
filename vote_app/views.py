@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from random import choice
 
 from .forms import CreateCodeForm
-from .models import UserVote, Higher
+from .models import UserVote, Higher, Lower
 
 
 def user_rand_code(level):
@@ -76,7 +76,8 @@ def code(request):
 
 def voting(request):
     if request.method == 'POST':
-        teachers = Higher.objects.all()
+        h_teachers = Higher.objects.all()
+        u_teachers = Lower.objects.all()
         try:
             user_unique_code = request.POST['EUC']
             print(user_unique_code)
@@ -84,11 +85,12 @@ def voting(request):
             try:
                 selected_teacher = request.POST['teachers']
             except django.utils.datastructures.MultiValueDictKeyError:
-                status = request.POST['voted']
+                voted_teacher = request.POST['voted']
                 glhpoint = request.POST['GLH']
                 support = request.POST['support']
                 style = request.POST['style']
                 resources = request.POST['resources']
+                teacher_type = request.POST['teacher_type']
 
                 point = int(glhpoint) + int(support) + int(style) + int(resources)
 
@@ -96,10 +98,14 @@ def voting(request):
                 context = {
                     'mode': 'voted',
                     'point': point,
-                    'voted_teacher': status
+                    'voted_teacher': voted_teacher
                 }
 
-                get_teacher = Higher.objects.get(name=status)
+                if teacher_type == "under":
+                    get_teacher = Lower.objects.get(name=voted_teacher)
+                if teacher_type == "higher":
+                    get_teacher = Higher.objects.get(name=voted_teacher)
+
                 old_point = get_teacher.points
                 print(old_point)
                 get_teacher.points = old_point + int(point)
@@ -113,16 +119,26 @@ def voting(request):
 
             else:
                 user_code = request.POST['code']
-                print(selected_teacher)
-                teacher_obj = Higher.objects.get(name=selected_teacher)
+                teacher_type = request.POST['teacher_type']
+                print(teacher_type)
+                if teacher_type == "under":
+                    teacher_obj = Lower.objects.get(name=selected_teacher)
+                elif teacher_type == "higher":
+                    teacher_obj = Higher.objects.get(name=selected_teacher)
+
                 teacher_id = teacher_obj.id
+                if teacher_type == "under":
+                    obj = Lower.objects.get(id=teacher_id)
+                    teacher_type = "under"
+                elif teacher_type == "higher":
+                    obj = Higher.objects.get(id=teacher_id)
+                    teacher_type = "higher"
 
                 print(teacher_id)
 
                 units = ['unit_one', 'unit_two', 'unit_three']
                 teacher_units = []
                 for unit in units:
-                    obj = Higher.objects.get(id=teacher_id)
                     field_obj = Higher._meta.get_field(unit)
                     get_units = field_obj.value_from_object(obj)
                     teacher_units.append(get_units)
@@ -138,6 +154,7 @@ def voting(request):
                     'glhs': all_glh,
                     'aveGlhs': averageglh,
                     'user_code': user_code,
+                    'teacher_type': teacher_type,
                 }
                 return render(request, 'vote/castVote.html', context)
         else:
@@ -157,19 +174,43 @@ def voting(request):
                     }
                     return render(request, 'vote/vote.html', context)
                 else:
+                    if "U" in user_unique_code:
+                        teachers = u_teachers
+                        teacher_type = "under"
+                    elif "H" in user_unique_code:
+                        teachers = h_teachers
+                        teacher_type = "higher"
                     context = {
                         'message': user_unique_code,
                         'teachers': teachers,
                         'mode': 'start',
+                        'teacher_type': teacher_type,
                     }
                     return render(request, 'vote/castVote.html', context)
     return render(request, 'vote/vote.html')
 
 
 def result(request):
-    teachers = Higher.objects.all()
+    u_teachers = Lower.objects.all()
+    h_teachers = Higher.objects.all()
     context = {
-        'teacher': teachers
+        'u_teacher': u_teachers,
+        'h_teacher': h_teachers,
     }
     return render(request, 'vote/results.html', context)
 
+
+def adminrest(request):
+    if request.method == 'POST':
+        action = request.POST['reset']
+        print(action)
+        counts = UserVote.objects.all()
+        for count in counts:
+            count.user_vote_count = 0
+            count.save()
+
+    vote_counts = UserVote.objects.all()
+    context = {
+        'counts': vote_counts,
+    }
+    return render(request, 'vote/reset.html', context)

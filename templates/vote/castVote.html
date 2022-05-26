@@ -21,6 +21,9 @@
                     <select name="code" id="pandora">
                         <option>{{ message }}</option>
                     </select>
+                    <select name="teacher_type" id="pandora">
+                        <option>{{ teacher_type }}</option>
+                    </select>
                     <button class="btn btn-success">Select</button>
                 </form>
 
@@ -40,6 +43,9 @@
             <form method="POST">
                 {% csrf_token %}
                 <div class="teacher-details">
+                    <select name="teacher_type" id="pandora">
+                        <option>{{ teacher_type }}</option>
+                    </select>
                     <select name="code" id="pandora">
                         <option>{{ user_code }}</option>
                     </select>

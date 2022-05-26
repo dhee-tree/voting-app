@@ -20,3 +20,16 @@ class Higher(models.Model):
 
     points = models.IntegerField(default=0)
 
+
+class Lower(models.Model):
+    name = models.CharField(max_length=100)
+    unit_one = models.CharField(max_length=100)
+    unit_one_glh = models.IntegerField(default=0)
+
+    unit_two = models.CharField(max_length=100)
+    unit_two_glh = models.IntegerField(default=0)
+
+    unit_three = models.CharField(max_length=100)
+    unit_three_glh = models.IntegerField(default=0)
+
+    points = models.IntegerField(default=0)
