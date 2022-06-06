@@ -7,6 +7,9 @@
 {% block main %}
 <div class="row">
 		<div class="col-md-12">
+
+            <section>
+
             {% if mode == 'start' %}
                 <p>{{ message }} is valid!</p>
                 <p>Please choose who you are voting for</p>
@@ -38,7 +41,16 @@
             <p>Voting with {{ user_code }}</p>
                 <p>{{ teacher }}'s total GLH is {{ glhs }}, this gives him {{ aveGlhs }} points </p>
                 <p>Give more details, the more questions you answer the more points {{ teacher }} gets.</p>
-                <br>
+
+                <div class="popup" onclick="popupFunc()">
+                    What does your answers mean? <i class="fa fa-question-circle fa-lg" aria-hidden="true"></i>
+                  <span class="popuptext" id="popupData">
+                      <p>No selection: 0 Point.</p>
+                      <p> Weak: 1 Point.</p>
+                      <p>Solid: 2 Points.</p>
+                      <p>Divine: 3 Points.</p>
+                  </span>
+                </div>
 
             <form method="POST">
                 {% csrf_token %}
@@ -52,6 +64,7 @@
                     <select name="GLH" id="pandora">
                         <option>{{ aveGlhs }}</option>
                     </select>
+
                     <p>How supportive is the teacher?</p>
                     <input type="radio" id="pandora" name="support" value="0" checked>
 
@@ -65,7 +78,7 @@
                     <label for="supportDivine">Divine</label>
                 </div>
 
-                <div class="teacher-details">
+                <div class="teacher-details-2">
                     <p>How would you rate their teaching style?</p>
                     <input type="radio" id="pandora" name="style" value="0" checked>
 
@@ -93,7 +106,7 @@
                     <label for="resourcesDivine">Divine</label>
                 </div>
 
-                <br><br>
+                <br>
 
                 <button name="voted" class="btn btn-success" type="submit" value="{{ teacher }}">Vote for {{ teacher }}</button>
 
@@ -106,6 +119,7 @@
                 <a href="https://forms.gle/7xeo54yRWD3tHzVr6">Leave Feedback</a><br><br>
                 <a href="{% url 'results' %}" class="btn btn-success">See Results</a>
             {% endif %}
+            </section>
 		</div>
 </div>
 {% endblock %}

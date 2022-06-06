@@ -31,6 +31,31 @@ def code(request):
     if request.method == 'POST':
         selected_level = request.POST['level']
         form = CreateCodeForm(request.POST)
+
+        try:
+            reset = request.POST['reset']
+        except django.utils.datastructures.MultiValueDictKeyError:
+            pass
+        else:
+            reset_email = request.POST['email']
+            get_reset_user = UserVote.objects.get(email=reset_email)
+            get_reset_user_code = get_reset_user.user_code
+
+            send_mail(
+                'Resending Your Code',
+                f'Hey there, you recently reset your code, here it is: {get_reset_user_code}\n'
+                f'Vote for your teachers here: https://sleepy-sands-97119.herokuapp.com/voting/',
+                'realdheetree@gmail.com',
+                [reset_email],
+                fail_silently=False
+            )
+
+            context = {
+                'form': form,
+                'resent': 'Code Successfully Sent!',
+            }
+            return render(request, 'vote/code.html', context)
+
         if form.is_valid():
             valid_levels = ['level 1', 'level 2', 'level 3']
             if selected_level in valid_levels:
@@ -41,25 +66,35 @@ def code(request):
                 else:
                     level = 'H'
                 user_code = user_rand_code(level)
-                save_user = UserVote(email=user_email, user_code=user_code)
-                save_user.save()
 
-                selected_level_title = selected_level.title()
-                send_mail(
-                    'College Voting Code',
-                    f'Hello, here is your code: {user_code}\nAs you are a {selected_level_title} student, your code '
-                    f'will only give you access to {selected_level_title} teachers.\n\n'
-                    f'Vote here: https://sleepy-sands-97119.herokuapp.com/voting/',
-                    'realdheetree@gmail.com',
-                    [user_email],
-                    fail_silently=False
-                )
+                try:
+                    registered_user = UserVote.objects.get(email=user_email)
+                except UserVote.DoesNotExist:
+                    save_user = UserVote(email=user_email, user_code=user_code)
+                    save_user.save()
 
-                context = {
-                    'email': user_email
-                }
+                    send_mail(
+                        'College Voting Code',
+                        f'Hello, here is your code: {user_code}\nAs you are a {selected_level.title()} student, your code '
+                        f'will only give you access to {selected_level.title()} teachers.\n\n'
+                        f'Vote here: https://sleepy-sands-97119.herokuapp.com/voting/',
+                        'realdheetree@gmail.com',
+                        [user_email],
+                        fail_silently=False
+                    )
 
-                return render(request, 'vote/success.html', context)
+                    context = {
+                        'email': user_email
+                    }
+
+                    return render(request, 'vote/success.html', context)
+                else:
+                    context = {
+                        'form': form,
+                        'email': 'Email already registered.',
+                        'reset': 'true',
+                    }
+                    return render(request, 'vote/code.html', context)
             else:
                 context = {
                     'form': form,
@@ -71,6 +106,7 @@ def code(request):
     context = {
         'form': form
     }
+
     return render(request, 'vote/code.html', context)
 
 
