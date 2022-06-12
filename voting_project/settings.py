@@ -92,11 +92,11 @@ WSGI_APPLICATION = 'voting_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dcntcculqgnan0',
-        'USER': 'vzdvwhtglrswob',
-        'PASSWORD': '50c206008b0efa14098347031cf347680ac731f10f9a606ebaa91d1acf797ada',
-        'HOST': 'ec2-54-173-77-184.compute-1.amazonaws.com',
+        'ENGINE': config("DATABASE_ENGINE"),
+        'NAME': config("DATABASE_NAME"),
+        'USER': config("DATABASE_USER"),
+        'PASSWORD': config("DATABASE_PASSWORD"),
+        'HOST': config("DATABASE_HOST"),
         'PORT': '5432',
     }
 }
@@ -144,8 +144,8 @@ django_heroku.settings(locals())
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = "realdheetree@gmail.com"
-EMAIL_HOST_PASSWORD = 'tqzxefkuarchlonw'
+EMAIL_HOST_USER = config("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD")
 EMAIL_USE_TLS = True
 
 # Default primary key field type
