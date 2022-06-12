@@ -59,7 +59,25 @@ def code(request):
         if form.is_valid():
             valid_levels = ['level 1', 'level 2', 'level 3']
             if selected_level in valid_levels:
-                user_email = form.cleaned_data['email']
+                try_email = form.cleaned_data['email']
+                student_email = try_email  # Get email
+                # find overall length, 27 chars long for '@student.peterborough.ac.uk'
+                email_length = len(student_email)
+                position_count = 0  # holds position of tested charter in loop
+                for char in student_email:  # for loop to find the '@' in the email then tests that
+                    if char == '@':  # when reaching the'@'....
+                        # ...test if the rest of the string matches this
+                        if student_email[position_count:email_length] == '@student.peterborough.ac.uk':
+                            user_email = try_email
+                        else:
+                            context = {
+                                'form': form,
+                                'student': 'Sorry you are not a student',
+                            }
+
+                            return render(request, 'vote/code.html', context)
+                    else:
+                        position_count += 1
 
                 if selected_level == 'level 1' or selected_level == 'level 2':
                     level = 'U'
@@ -116,7 +134,6 @@ def voting(request):
         u_teachers = Lower.objects.all()
         try:
             user_unique_code = request.POST['EUC']
-            print(user_unique_code)
         except django.utils.datastructures.MultiValueDictKeyError:
             try:
                 selected_teacher = request.POST['teachers']
@@ -165,22 +182,26 @@ def voting(request):
                 teacher_id = teacher_obj.id
                 if teacher_type == "under":
                     obj = Lower.objects.get(id=teacher_id)
+                    field = Lower
                     teacher_type = "under"
                 elif teacher_type == "higher":
                     obj = Higher.objects.get(id=teacher_id)
+                    field = Higher
                     teacher_type = "higher"
 
                 print(teacher_id)
 
-                units = ['unit_one', 'unit_two', 'unit_three']
+                units = ['unit_one', 'unit_two', 'unit_three', 'unit_four', 'unit_five']
                 teacher_units = []
                 for unit in units:
-                    field_obj = Higher._meta.get_field(unit)
+                    field_obj = field._meta.get_field(unit)
                     get_units = field_obj.value_from_object(obj)
-                    teacher_units.append(get_units)
+                    # Do not add items that has None
+                    if get_units != "None":
+                        teacher_units.append(get_units)
 
-                all_glh = obj.unit_one_glh + obj.unit_two_glh + obj.unit_three_glh
-                averageglh = all_glh // 60
+                all_glh = obj.unit_one_glh + obj.unit_two_glh + obj.unit_three_glh + obj.unit_four_glh + obj.unit_five_glh
+                averageglh = all_glh // 30
 
                 context = {
                     'teacher': selected_teacher,

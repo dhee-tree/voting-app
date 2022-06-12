@@ -1,3 +1,17 @@
+/* font for count down */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Ravi+Prakash&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
+
+#countdown {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 60px;
+}
+
+#countdown-note {
+    font-size: 30px;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+}
+
 section {
     text-align: center;
 }

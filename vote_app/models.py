@@ -8,28 +8,40 @@ class UserVote(models.Model):
 
 
 class Higher(models.Model):
-    name = models.CharField(max_length=100)
-    unit_one = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
+    unit_one = models.CharField(max_length=50)
     unit_one_glh = models.IntegerField(default=0)
 
-    unit_two = models.CharField(max_length=100)
+    unit_two = models.CharField(max_length=50)
     unit_two_glh = models.IntegerField(default=0)
 
-    unit_three = models.CharField(max_length=100)
+    unit_three = models.CharField(max_length=50, default=None)
     unit_three_glh = models.IntegerField(default=0)
+
+    unit_four = models.CharField(max_length=50, default=None)
+    unit_four_glh = models.IntegerField(default=0)
+
+    unit_five = models.CharField(max_length=50, default=None)
+    unit_five_glh = models.IntegerField(default=0)
 
     points = models.IntegerField(default=0)
 
 
 class Lower(models.Model):
-    name = models.CharField(max_length=100)
-    unit_one = models.CharField(max_length=100)
+    name = models.CharField(max_length=50)
+    unit_one = models.CharField(max_length=50)
     unit_one_glh = models.IntegerField(default=0)
 
-    unit_two = models.CharField(max_length=100)
+    unit_two = models.CharField(max_length=50)
     unit_two_glh = models.IntegerField(default=0)
 
-    unit_three = models.CharField(max_length=100)
+    unit_three = models.CharField(max_length=50, default=None)
     unit_three_glh = models.IntegerField(default=0)
+
+    unit_four = models.CharField(max_length=50, default=None)
+    unit_four_glh = models.IntegerField(default=0)
+
+    unit_five = models.CharField(max_length=50, default=None)
+    unit_five_glh = models.IntegerField(default=0)
 
     points = models.IntegerField(default=0)
