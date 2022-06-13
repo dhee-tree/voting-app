@@ -251,9 +251,12 @@ def voting(request):
 def result(request):
     u_teachers = Lower.objects.all()
     h_teachers = Higher.objects.all()
+    votes = UserVote.objects.all()
+
     context = {
         'u_teacher': u_teachers,
         'h_teacher': h_teachers,
+        'total_votes': len(votes),
     }
     return render(request, 'vote/results.html', context)
 
