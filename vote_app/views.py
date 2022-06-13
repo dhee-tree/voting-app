@@ -45,7 +45,7 @@ def code(request):
             send_mail(
                 'Resending Your Code',
                 f'Hey there, you recently reset your code, here it is: {get_reset_user_code}\n'
-                f'Vote for your teachers here: https://sleepy-sands-97119.herokuapp.com/voting/',
+                f'Vote for your teachers here: http://www.iegstudentvote.tech/voting/',
                 config('EMAIL_HOST_USER'),
                 [reset_email],
                 fail_silently=False
@@ -96,7 +96,7 @@ def code(request):
                         'College Voting Code',
                         f'Hello, here is your code: {user_code}\nAs you are a {selected_level.title()} student, your code '
                         f'will only give you access to {selected_level.title()} teachers.\n\n'
-                        f'Vote here: https://sleepy-sands-97119.herokuapp.com/voting/',
+                        f'Vote here: http://www.iegstudentvote.tech/voting/',
                         config('EMAIL_HOST_USER'),
                         [user_email],
                         fail_silently=False
