@@ -1,10 +1,10 @@
 /* font for count down */
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Ravi+Prakash&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Neuton&display=swap');
 
 #countdown {
-    font-family: 'Orbitron', sans-serif;
-    font-size: 60px;
+    font-family: 'Neuton', serif;
+    font-size: 100px;
 }
 
 #countdown-note {
