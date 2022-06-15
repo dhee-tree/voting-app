@@ -17,9 +17,10 @@ def winner(data):
     teacher_list.sort(reverse=True)
     all_teachers = teacher_list
     win = f"{all_teachers[0][1]} won with a total of {all_teachers[0][0]} points."
-    diff = f"{all_teachers[0][1]} had {all_teachers[0][0] - all_teachers[1][0]} points more than the runner up who had {all_teachers[1][0]} points."
+    runner = f"{all_teachers[1][1]} had {all_teachers[1][0]} points, as runner up."
+    third = f"{all_teachers[2][1]} came third with {all_teachers[2][0]} points."
 
-    return win, diff, all_teachers[0][1]
+    return win, runner, third
 
 
 def user_rand_code(level):
@@ -275,10 +276,10 @@ def result(request):
         'total_votes': len(votes),
         'h_win': high_winner[0],
         'h_note': high_winner[1],
+        'h_third': high_winner[2],
         'u_win': lower_winner[0],
         'u_note': lower_winner[1],
-        'h_winner': high_winner[2],
-        'u_winner': lower_winner[2],
+        'u_third': lower_winner[2],
     }
     return render(request, 'vote/results.html', context)
 
