@@ -261,7 +261,6 @@ def result(request):
     h_winner = h_points
     h_winner_note = f"{h_winner[0][1]} won with a total of {h_winner[0][0]} points."
     h_winner_diff = f"{h_winner[0][1]} had {h_winner[0][0] - h_winner[1][0]} points more than the runner up who had {h_winner[1][0]} points."
-    print(h_winner_diff)
 
     context = {
         'u_teacher': u_teachers,
