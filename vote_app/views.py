@@ -21,6 +21,7 @@ def winner(data):
 
     return win, diff, all_teachers[0][1]
 
+
 def user_rand_code(level):
     """Generates six random number, which would be combined with either H or U for user code."""
     num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
