@@ -2,6 +2,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Neuton&display=swap');
 
+#finished {
+    color: green;
+    font-weight: bold;
+}
+
 #countdown {
     font-family: 'Neuton', serif;
     font-size: 100px;
