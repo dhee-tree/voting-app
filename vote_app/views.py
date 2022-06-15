@@ -9,6 +9,18 @@ from .forms import CreateCodeForm
 from .models import UserVote, Higher, Lower
 
 
+def winner(data):
+    teacher_list = []
+    for teacher in data:
+        teacher_data = [teacher.points, teacher.name]
+        teacher_list.append(teacher_data)
+    teacher_list.sort(reverse=True)
+    all_teachers = teacher_list
+    win = f"{all_teachers[0][1]} won with a total of {all_teachers[0][0]} points."
+    diff = f"{all_teachers[0][1]} had {all_teachers[0][0] - all_teachers[1][0]} points more than the runner up who had {all_teachers[1][0]} points."
+
+    return win, diff, all_teachers[0][1]
+
 def user_rand_code(level):
     """Generates six random number, which would be combined with either H or U for user code."""
     num_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
@@ -253,21 +265,19 @@ def result(request):
     h_teachers = Higher.objects.all()
     votes = UserVote.objects.all()
 
-    h_points = []
-    for teacher in h_teachers:
-        teacher_points = [teacher.points, teacher.name]
-        h_points.append(teacher_points)
-    h_points.sort(reverse=True)
-    h_winner = h_points
-    h_winner_note = f"{h_winner[0][1]} won with a total of {h_winner[0][0]} points."
-    h_winner_diff = f"{h_winner[0][1]} had {h_winner[0][0] - h_winner[1][0]} points more than the runner up who had {h_winner[1][0]} points."
+    high_winner = winner(h_teachers)
+    lower_winner = winner(u_teachers)
 
     context = {
         'u_teacher': u_teachers,
         'h_teacher': h_teachers,
         'total_votes': len(votes),
-        'h_note': h_winner_note,
-        'h_diff': h_winner_diff,
+        'h_win': high_winner[0],
+        'h_note': high_winner[1],
+        'u_win': lower_winner[0],
+        'u_note': lower_winner[1],
+        'h_winner': high_winner[2],
+        'u_winner': lower_winner[2],
     }
     return render(request, 'vote/results.html', context)
 
