@@ -253,10 +253,21 @@ def result(request):
     h_teachers = Higher.objects.all()
     votes = UserVote.objects.all()
 
+    h_points = []
+    for teacher in h_teachers:
+        teacher_points = [teacher.points, teacher.name]
+        h_points.append(teacher_points)
+    h_points.sort(reverse=True)
+    h_winner = h_points
+    h_winner_note = f"{h_winner[0][1]} won with a total of {h_winner[0][0]} points."
+    h_winner_diff = f"{h_winner[0][1]} had {h_winner[0][0] - h_winner[1][0]} points more than the runner up who had {h_winner[1][0]} points."
+
     context = {
         'u_teacher': u_teachers,
         'h_teacher': h_teachers,
         'total_votes': len(votes),
+        'h_note': h_winner_note,
+        'h_diff': h_winner_diff,
     }
     return render(request, 'vote/results.html', context)
 
