@@ -10,15 +10,20 @@ from .models import UserVote, Higher, Lower
 
 
 def winner(data):
+    """Get teachers points and their names, sort them and return name, points and some message."""
     teacher_list = []
     for teacher in data:
         teacher_data = [teacher.points, teacher.name]
         teacher_list.append(teacher_data)
+    # Sort list, since points is first, greater points would be first
     teacher_list.sort(reverse=True)
-    all_teachers = teacher_list
-    win = f"{all_teachers[0][1]} won with a total of {all_teachers[0][0]} points."
-    runner = f"{all_teachers[1][1]} had {all_teachers[1][0]} points, as runner up."
-    third = f"{all_teachers[2][1]} came third with {all_teachers[2][0]} points."
+    # Since the actual teacher data is a list of two items, the names would be last i.e index 1
+    # To get the name we refer to the index of the teacher on the main list and then the index of their name
+
+    # These are outputs which would be returned
+    win = f"{teacher_list[0][1]} won with a total of {teacher_list[0][0]} points."
+    runner = f"{teacher_list[1][1]} had {teacher_list[1][0]} points, as runner up."
+    third = f"{teacher_list[2][1]} came third with {teacher_list[2][0]} points."
 
     return win, runner, third
 
@@ -37,25 +42,133 @@ def user_rand_code(level):
     return f'{level}-{num}{num2}{num3}{num4}{num5}{num6}'
 
 
+# Function for index page
 def home(request):
     context = {}
     return render(request, 'vote/index.html', context)
 
 
+# Function to generate code for user and send them their code via email
+# Also handles email checks and code retrieval in case the user lost their code
 def code(request):
+    # Would return the default page contents unless a post method is received
     if request.method == 'POST':
+        # Users are expected to select a level (See code.html, line 15)
         selected_level = request.POST['level']
+        # Calling form from forms.py
         form = CreateCodeForm(request.POST)
 
+        # Check user email, selected level. Send them a new code if they are a student and unregistered
+        # Reject their registration if their email is not a student email
+        # Offer to resend code if they have already registered
+        if form.is_valid():
+            valid_levels = ['level 1', 'level 2', 'level 3']
+            # Check if the selected level matches what we expect
+            if selected_level in valid_levels:
+                # Get the email from form after post
+                try_email = form.cleaned_data['email']
+                student_email = try_email
+                # find email length
+                email_length = len(student_email)
+                position_count = 0  # holds position of tested charter in loop
+                for char in student_email:  # loop to find the '@' in the email then tests from the @
+                    if char == '@':  # when reaching the'@'....
+                        # ...test if the rest of the string matches this, using list slicing
+                        if student_email[position_count:email_length] == '@student.peterborough.ac.uk':
+                            # If the email passes store
+                            user_email = try_email
+                        else:
+                            # Else render error message
+                            # Since rendering refreshes the page, no other process would run
+                            context = {
+                                'form': form,
+                                'student': 'Sorry you are not a student',  # Expected by code.html line 25
+                            }
+
+                            return render(request, 'vote/code.html', context)
+                    else:
+                        # Would increase position_count if letter is not @ so it can be used for slicing
+                        position_count += 1
+
+                # We have two separate levels, so it can only be U or H
+                if selected_level == 'level 1' or selected_level == 'level 2':
+                    level = 'U'
+                else:
+                    level = 'H'
+                # Call the code generator function, pass the letter which would be combined to the random numbers
+                user_code = user_rand_code(level)
+
+                try:
+                    # Since user_email would only be available if the email passes check
+                    # We watch for any errors, and check if email is stored on database
+                    # On this occasion we want an error, an error means the email has not been registered
+                    # No errors, then they are an existing user, so offer reset
+                    registered_user = UserVote.objects.get(email=user_email)
+                except UserVote.DoesNotExist:
+                    # If the user is not registered, we can create a new user
+                    save_user = UserVote(email=user_email, user_code=user_code)
+                    save_user.save()
+
+                    # Send the user their code via email
+                    send_mail(
+                        # The subject of the email
+                        'College Voting Code',
+                        # The body of the email
+                        f'Hello, here is your code: {user_code}\nAs you are a {selected_level.title()} student, your code '
+                        f'will only give you access to {selected_level.title()} teachers.\n\n'
+                        f'Vote here: https://sleepy-sands-97119.herokuapp.com/voting/',
+                        # The sending email
+                        # README config is used to refer to an environmental variable (env)
+                        # EMAIL_HOST_USER is an environmental variable which is set in the .env file
+                        # This could easy be a string i.e 'example@gmail.com'
+                        config('EMAIL_HOST_USER'),
+                        # The receiving email
+                        [user_email],
+                        # Sends feedback once email fails to send
+                        fail_silently=False
+                    )
+
+                    # Render the success page with the email
+                    context = {
+                        'email': user_email  # Expected by code.html line 25
+                    }
+
+                    return render(request, 'vote/success.html', context)
+
+                # If the user is already registered, offer to resend code
+                else:
+                    context = {
+                        'form': form,
+                        'email': 'Email already registered.',
+                        'reset': 'true',  # We set reset to true, code.html Line 28 expects this.
+                    }
+                    return render(request, 'vote/code.html', context)
+
+            # Render error message if the selected level is not selected
+            else:
+                context = {
+                    'form': form,
+                    'message': 'Please select a level.',
+                }
+                return render(request, 'vote/code.html', context)
+
         try:
+            # If user is already registered, we give them the option reset their code
+            # It would be triggered by the resend code btn with reset as id (See code.html, line 29)
             reset = request.POST['reset']
         except django.utils.datastructures.MultiValueDictKeyError:
+            # Django would throw an error if reset is not sent back during post
+            # We just pass
             pass
         else:
+            # The email field from forms.py, it has a field with email as tag
             reset_email = request.POST['email']
+            # Check database for the reset email, this would return the id of the item in the database
             get_reset_user = UserVote.objects.get(email=reset_email)
+            # Using the id, get the user_code field
             get_reset_user_code = get_reset_user.user_code
 
+            # Send the user an email
             send_mail(
                 'Resending Your Code',
                 f'Hey there, you recently reset your code, here it is: {get_reset_user_code}\n'
@@ -65,75 +178,15 @@ def code(request):
                 fail_silently=False
             )
 
+            # Still return the email form and a message
+            # The message is expected on code.html as resent (See code.html, line 27)
             context = {
                 'form': form,
                 'resent': 'Code Successfully Sent!',
             }
             return render(request, 'vote/code.html', context)
 
-        if form.is_valid():
-            valid_levels = ['level 1', 'level 2', 'level 3']
-            if selected_level in valid_levels:
-                try_email = form.cleaned_data['email']
-                student_email = try_email  # Get email
-                # find overall length, 27 chars long for '@student.peterborough.ac.uk'
-                email_length = len(student_email)
-                position_count = 0  # holds position of tested charter in loop
-                for char in student_email:  # for loop to find the '@' in the email then tests that
-                    if char == '@':  # when reaching the'@'....
-                        # ...test if the rest of the string matches this
-                        if student_email[position_count:email_length] == '@student.peterborough.ac.uk':
-                            user_email = try_email
-                        else:
-                            context = {
-                                'form': form,
-                                'student': 'Sorry you are not a student',
-                            }
-
-                            return render(request, 'vote/code.html', context)
-                    else:
-                        position_count += 1
-
-                if selected_level == 'level 1' or selected_level == 'level 2':
-                    level = 'U'
-                else:
-                    level = 'H'
-                user_code = user_rand_code(level)
-
-                try:
-                    registered_user = UserVote.objects.get(email=user_email)
-                except UserVote.DoesNotExist:
-                    save_user = UserVote(email=user_email, user_code=user_code)
-                    save_user.save()
-
-                    send_mail(
-                        'College Voting Code',
-                        f'Hello, here is your code: {user_code}\nAs you are a {selected_level.title()} student, your code '
-                        f'will only give you access to {selected_level.title()} teachers.\n\n'
-                        f'Vote here: https://sleepy-sands-97119.herokuapp.com/voting/',
-                        config('EMAIL_HOST_USER'),
-                        [user_email],
-                        fail_silently=False
-                    )
-
-                    context = {
-                        'email': user_email
-                    }
-
-                    return render(request, 'vote/success.html', context)
-                else:
-                    context = {
-                        'form': form,
-                        'email': 'Email already registered.',
-                        'reset': 'true',
-                    }
-                    return render(request, 'vote/code.html', context)
-            else:
-                context = {
-                    'form': form,
-                    'message': 'Please select a level.',
-                }
-                return render(request, 'vote/code.html', context)
+    # If the request is not a post, render the form
     else:
         form = CreateCodeForm
     context = {
@@ -143,16 +196,28 @@ def code(request):
     return render(request, 'vote/code.html', context)
 
 
+# Function to handle the voting page
 def voting(request):
     if request.method == 'POST':
+        # Get teachers from their respective models
         h_teachers = Higher.objects.all()
         u_teachers = Lower.objects.all()
         try:
+            # Get the code from the post request
             user_unique_code = request.POST['EUC']
+            # Django would throw an error if EUC is not sent back during post
         except django.utils.datastructures.MultiValueDictKeyError:
+            # If EUC is not sent, check for teachers
             try:
                 selected_teacher = request.POST['teachers']
+                # Django would throw an error if teachers is not sent back during post
             except django.utils.datastructures.MultiValueDictKeyError:
+                # If neither EUC or teachers is sent, check for voted
+
+                # README Basically, we are using one page for three different things
+                # 1. Checking user code
+                # 2. Rendering the relevant teachers, based on the selected level
+                # 3. Rendering the voting page, based on the selected teacher.
                 voted_teacher = request.POST['voted']
                 glhpoint = request.POST['GLH']
                 support = request.POST['support']

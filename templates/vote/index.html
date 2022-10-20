@@ -13,8 +13,8 @@
 
                 <p id="finished">Voting is now finished, see results below!</p>
 
-                <a href="{% url 'index' %}" class="vote btn btn-secondary" onclick="voteEnd()">Get Code</a> <br><br>
-                <a href="{% url 'index' %}" class="vote btn btn-primary">Cast A Vote</a> <br>
+                <a href="{% url 'code' %}" class="vote btn btn-secondary" onclick="voteEnd()">Get Code</a> <br><br>
+                <a href="{% url 'voting' %}" class="vote btn btn-primary">Cast A Vote</a> <br>
                 <!-- replace # with url of your page -->
                 <a href="{% url 'results' %}" class="vote btn btn-success">See Results</a>
                 <p>
