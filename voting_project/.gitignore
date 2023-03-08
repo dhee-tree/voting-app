@@ -1,1 +1,7 @@
 .env
+db.sqlite3
+vote_app/__pycache__/urls.cpython-39.pyc
+vote_app/__pycache__/views.cpython-39.pyc
+voting_project/__pycache__/__init__.cpython-310.pyc
+voting_project/__pycache__/__init__.cpython-39.pyc
+voting_project/__pycache__/settings.cpython-39.pyc
