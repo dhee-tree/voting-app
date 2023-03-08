@@ -30,7 +30,7 @@ var x = setInterval(function() {
   // If the count down is over, write some text
   if (distance < 0) {
     clearInterval(x);
-    document.getElementById("countdown-note").innerHTML = "Results:"
+    document.getElementById("countdown-note").innerHTML = "Results for 21/22 Session:"
     document.getElementById("countdown").innerHTML = "";
   }
 }, 1000);
