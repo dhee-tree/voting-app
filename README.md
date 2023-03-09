@@ -1,4 +1,4 @@
-# Best Teacher Website 
+# Best Teacher Website | Django Version for <a href="https://github.com/dhee-tree/best-teacher">best-teacher</a>
 ###### By Students, For Teachers
 
 This is a website created by the second year Lv 3 IT students of Peterborough College (Grad. 2022)
