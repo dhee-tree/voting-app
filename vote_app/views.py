@@ -21,6 +21,9 @@ def winner(data):
     # To get the name we refer to the index of the teacher on the main list and then the index of their name
 
     # These are outputs which would be returned
+    # guard against index errors if there are less than three teachers
+    if len(teacher_list) < 3:
+        return "Not enough data", "", ""
     win = f"{teacher_list[0][1]} won with a total of {teacher_list[0][0]} points."
     runner = f"{teacher_list[1][1]} had {teacher_list[1][0]} points, as runner up."
     third = f"{teacher_list[2][1]} came third with {teacher_list[2][0]} points."
