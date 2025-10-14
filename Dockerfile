@@ -30,6 +30,9 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 # Copy the rest of the project
 COPY . .
 
+# Collect static files
+RUN python manage.py collectstatic --noinput
+
 # Expose internal port (inside container)
 EXPOSE 8000
 

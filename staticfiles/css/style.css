@@ -1,0 +1,150 @@
+/* font for count down */
+@import url('https://fonts.googleapis.com/css2?family=Kdam+Thmor+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Neuton&display=swap');
+
+#finished {
+    color: green;
+    font-weight: bold;
+}
+
+#countdown {
+    font-family: 'Neuton', serif;
+    font-size: 100px;
+}
+
+.note {
+    font-size: 30px;
+    font-family: 'Kdam Thmor Pro', sans-serif;
+}
+
+section {
+    text-align: center;
+}
+
+.vote {
+    margin-bottom: 10px;
+    width: 55%;
+}
+
+.success {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 100px;
+    border-radius: 50%;
+    width: 10%;
+    background-color: #027500;
+    color: #fff;
+}
+
+.votedTxt {
+    display: block;
+    margin: 12px 0;
+}
+
+.successTxt {
+    margin-left: auto;
+    margin-right: auto;
+}
+.code-form {
+    width: 300px;
+    padding: 5px;
+}
+
+.message {
+    color: red;
+    display: inline-block;
+}
+
+.resent {
+    color: green;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.btn-warning {
+    margin: 8px;
+}
+
+.unit-odd {
+    color: white;
+    background-color: grey;
+    padding: 20px;
+    margin: 5px;
+}
+
+.teacher-details {
+    background-color: #e1dede; /* #dde7da */
+    padding: 5px;
+    margin: auto;
+    width: 20rem;
+}
+
+.teacher-details-2 {
+    background-color: whitesmoke;
+    padding: 5px;
+    margin: auto;
+    width: 20rem;
+}
+
+#pandora {
+    display: none;
+}
+
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  border: 2px solid;
+  padding: 5px;
+  margin-bottom: 15px;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 160px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -80px;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
