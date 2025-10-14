@@ -14,7 +14,7 @@ To achieve the goal we are relying on contribution and time investment from stud
 
 The project would be developed and deployed using *online IDE* **Replit** and **GitHub**. Both platforms provide remote access, team collaboration, version control, testing capabilities, web hosting and more.
 
-Website to have five pages; home, code, voting, success vote and results page. See [Whitepaper](https://docs.google.com/document/d/14LhrWhSP0YzBVImPPuFdOkEAGBql6S2qNHC6fDzZq_k/edit?usp=sharing), [Wireframe](https://www.figma.com/file/bH6OJ6EQKpY06QkakktooN/College-Voting?node-id=0%3A1)
+Website to have five pages; home, code, voting, success vote and results page. See [Whitepaper](https://docs.google.com/document/d/1iWQLQuK41gxTsDN0ECMbgm1l2w6nZjQpmOP6JbGffQw/edit?usp=sharing), [Wireframe](https://www.figma.com/file/bH6OJ6EQKpY06QkakktooN/College-Voting?node-id=0%3A1)
 
 ## Requirements 
 - Unique code generated for students.
