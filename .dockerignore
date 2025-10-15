@@ -2,6 +2,7 @@ __pycache__/
 .vscode
 README.md
 venv/
+staticfiles/
 
 # Ignore git files
 .git/
